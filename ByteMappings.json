@@ -1,0 +1,14 @@
+{
+    " ": {
+        "name": "Button A down",
+        "action": "down",
+        "key": "z",
+        "hex_byte": 20
+    },
+    "!": {
+        "name": "Button A up",
+        "action": "up",
+        "key": "z",
+        "hex_byte": 21
+    }
+}
