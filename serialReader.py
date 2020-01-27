@@ -1,12 +1,53 @@
 from serial import Serial
+from serial.serialutil import SerialException
 from time import sleep
+import pyautogui, json
 
-ser = Serial('/dev/ttyACM0', 9600) # ttyACM0 is the Arduino device | 9600 is baudrate
+# Read in the byte map json file
+def loadByteMap():
+    with open('ByteMappings.json') as f:
+        return json.loads(f.read())
+#
 
-while True: # Read indefinitely
-    bytesToRead = ser.inWaiting()
-    lineIn = ser.read(bytesToRead).decode('ascii') # Read in bytes and decode to ascii
-    if len(lineIn) > 0: # if nothing was read, skip
-        for sym in lineIn: # view each read char individually
-            print(sym) # print each char
-    sleep(.005) # slow down the loop a little bit
+# Start serial connection
+def loadSerial(device='/dev/ttyACM0', baudrate=9600):
+    try:
+        return Serial(device, baudrate)
+    except SerialException as e:
+        return None
+#
+
+# Synchronous function which returns after getting bytes from the serial device
+def getSerialBytes(dev):
+    # Read bytes from the serial device
+    bytesInQueue = dev.inWaiting()
+
+    # If the device had no input, keep checking until there is input.
+    while bytesInQueue == 0:
+        bytesInQueue = dev.inWaiting()
+
+    return dev.read(dev.inWaiting()).decode('ascii')
+#
+
+device = loadSerial()
+if device is None:
+    print("Serial device not found.")
+
+byte_map = loadByteMap()
+
+# Read bytes continually
+while True:
+    line_in = getSerialBytes(device)
+    for char in line_in:
+        try:
+            key_info = byte_map[char]
+            action = key_info["action"]
+            key = key_info["key"]
+
+            if action == "down":
+                pyautogui.keyDown(key)
+            elif action == "up":
+                pyautogui.keyUp(key)
+
+        except KeyError:
+            print("Controller sent invalid byte: [" + char + "]")
