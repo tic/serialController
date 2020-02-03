@@ -49,7 +49,7 @@ void loop()
 
     // the 8 different joystick axis changes
     // this uses -1 as left, but -1 would be up on the y axis
-    
+
     // -1 -1 --> -1, send "" (nothing)
     // -1  0 -->  0, send "\x25" (leave left)
     // -1  1 -->  1, send "\x25\x28" (leave left, enter right)
@@ -63,24 +63,24 @@ void loop()
     String jsBytes = "";
     if(xpos != joystickX) { // If they disagree, there will be an update.
       // Resolve "leaving" bytes
-      if(xpos == -1) jsBytes = "\x25";
-      else if(xpos == 1) jsBytes = "\x29";
+      if(xpos == -1) jsBytes = JOYSTICK_LV_LF;
+      else if(xpos == 1) jsBytes = JOYSTICK_LV_RT;
 
       // Resolve "entering" bytes
-      if(joystickX == -1) jsBytes += "\x24";
-      else if(joystickX == 1) jsBytes += "\x28";
+      if(joystickX == -1) jsBytes += JOYSTICK_GO_LF;
+      else if(joystickX == 1) jsBytes += JOYSTICK_GO_RT;
 
       xpos = joystickX;
     }
 
     if(joystickY != ypos) { // If they disagree, there will be an update.
       // Resolve "leaving" bytes
-      if(ypos == -1) jsBytes += "\x27";
-      else if(ypos == 1) jsBytes += "\x2B";
+      if(ypos == -1) jsBytes += JOYSTICK_LV_UP;
+      else if(ypos == 1) jsBytes += JOYSTICK_LV_DN;
 
       // Resolve "entering" bytes
-      if(joystickY == -1) jsBytes += "\x26";
-      else if(joystickY == 1) jsBytes += "\x2A";
+      if(joystickY == -1) jsBytes += JOYSTICK_GO_UP;
+      else if(joystickY == 1) jsBytes += JOYSTICK_GO_DN;
 
       ypos = joystickY;
     }
