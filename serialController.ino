@@ -22,6 +22,8 @@ void setup()
 {
     pinMode(BTN_PIN, INPUT);
     pinMode(LED_PIN, OUTPUT);
+    pinMode(JOYSTICK_X, INPUT);
+    pinMode(JOYSTICK_Y, INPUT);
     Serial.begin(9600);
 }
 
@@ -43,14 +45,13 @@ void loop()
         Serial.write(btnA ? BTN_A_DOWN : BTN_A_UP);
     }
 
-    int joystickX = beyondThreshold(analogRead(JOYSTICK_X));
-    int joystickY = beyondThreshold(analogRead(JOYSTICK_Y));
 
 
     // the 8 different joystick axis changes
     // this uses -1 as left, but -1 would be up on the y axis
 
     // -1 -1 --> -1, send "" (nothing)
+
     // -1  0 -->  0, send "\x25" (leave left)
     // -1  1 -->  1, send "\x25\x28" (leave left, enter right)
     //  0 -1 --> -1, send "\x24" (enter left)
@@ -60,6 +61,8 @@ void loop()
     //  1  0 -->  0, send "\x29" (leave right)
     //  1  1 -->  1, send "" (nothing)
 
+    int joystickX = beyondThreshold(analogRead(JOYSTICK_X));
+    int joystickY = beyondThreshold(analogRead(JOYSTICK_Y));
     String jsBytes = "";
     if(xpos != joystickX) { // If they disagree, there will be an update.
       // Resolve "leaving" bytes
