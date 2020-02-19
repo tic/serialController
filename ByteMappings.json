@@ -10,5 +10,53 @@
         "action": "up",
         "key": "z",
         "hex_byte": 21
+    },
+    "$": {
+        "name": "Joystick go left",
+        "action": "down",
+        "key": "left",
+        "hex_byte": 24
+    },
+    "%": {
+        "name": "Joystick leave left",
+        "action": "up",
+        "key": "left",
+        "hex_byte": 25
+    },
+    "&": {
+        "name": "Joystick go up",
+        "action": "down",
+        "key": "up",
+        "hex_byte": 26
+    },
+    "'": {
+        "name": "Joystick leave up",
+        "action": "up",
+        "key": "up",
+        "hex_byte": 27
+    },
+    "(": {
+        "name": "Joystick go right",
+        "action": "down",
+        "key": "right",
+        "hex_byte": 28
+    },
+    ")": {
+        "name": "Joystick leave right",
+        "action": "up",
+        "key": "right",
+        "hex_byte": 29
+    },
+    "*": {
+        "name": "Joystick go down",
+        "action": "down",
+        "key": "down",
+        "hex_byte": 30
+    },
+    "+": {
+        "name": "Joystick leave down",
+        "action": "up",
+        "key": "down",
+        "hex_byte": 31
     }
 }

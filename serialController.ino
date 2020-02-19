@@ -1,4 +1,4 @@
-#define BTN_PIN 2
+#define BTN_PIN 3
 #define LED_PIN 1
 #define JOYSTICK_X A0
 #define JOYSTICK_Y A1
@@ -7,8 +7,8 @@
 #define THRESHOLD 100
 
 
-#define BTN_A_DOWN "\x20"
-#define BTN_A_UP "\x21"
+#define BTN_A_DOWN "\x30"
+#define BTN_A_UP "\x31"
 #define JOYSTICK_GO_LF "\x24"
 #define JOYSTICK_LV_LF "\x25"
 #define JOYSTICK_GO_UP "\x26"
@@ -33,16 +33,17 @@ int ypos = 0;
 
 int beyondThreshold(int reading) {
   if(reading > MIDDLE + THRESHOLD) return 1;
-  if(reading < MIDDLE + THRESHOLD) return -1;
+  if(reading < MIDDLE - THRESHOLD) return -1;
   return 0;
 }
 
 void loop()
 {
-    bool btnA = digitalRead(BTN_PIN);
+    bool btnA = !digitalRead(BTN_PIN);
     if(btnA != button) { // If they disagree, there will be an update.
         button = btnA;
-        Serial.write(btnA ? BTN_A_DOWN : BTN_A_UP);
+        if(btnA) Serial.write(BTN_A_DOWN);
+        else Serial.write(BTN_A_UP);
     }
 
 
@@ -63,6 +64,7 @@ void loop()
 
     int joystickX = beyondThreshold(analogRead(JOYSTICK_X));
     int joystickY = beyondThreshold(analogRead(JOYSTICK_Y));
+    
     String jsBytes = "";
     if(xpos != joystickX) { // If they disagree, there will be an update.
       // Resolve "leaving" bytes
@@ -76,6 +78,7 @@ void loop()
       xpos = joystickX;
     }
 
+
     if(joystickY != ypos) { // If they disagree, there will be an update.
       // Resolve "leaving" bytes
       if(ypos == -1) jsBytes += JOYSTICK_LV_UP;
@@ -88,7 +91,7 @@ void loop()
       ypos = joystickY;
     }
 
-    if(jsBytes =! "") Serial.write(jsBytes); // Send joystick commands, if they exist.
+    if(jsBytes != "") Serial.print(jsBytes); // Send joystick commands, if they exist.
 
     digitalWrite(LED_PIN, button ? HIGH : LOW);
     delay(10);
